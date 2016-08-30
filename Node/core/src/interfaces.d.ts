@@ -163,8 +163,17 @@ interface ILocationV2 {
 }
 
 interface ILocalizer {
-    gettext(language: string, msgid: string): string;
-    ngettext(language: string, msgid: string, msgid_plural: string, count: number): string;
+    initialize(localizerSettings?: ILocalizerSettings): void;
+    load(locale: string, callback: ErrorCallback): void;     
+    defaultLocale(locale?: string): string   
+    gettext(locale: string, msgid: string, namespace?: string): string;
+    trygettext(locale: string, msgid: string, namespace?: string): string;
+    ngettext(locale: string, msgid: string, msgid_plural: string, count: number, namespace?: string): string;
+}
+
+interface ILocalizerSettings {
+    botLocalePath?: string;
+    defaultLocale?: string;
 }
 
 interface ISession {
@@ -172,6 +181,7 @@ interface ISession {
     message: IMessage;
     userData: any;
     dialogData: any;
+    localizer?: ILocalizer;
     error(err: Error): ISession;
     gettext(msgid: string, ...args: any[]): string;
     ngettext(msgid: string, msgid_plural: string, count: number): string;
