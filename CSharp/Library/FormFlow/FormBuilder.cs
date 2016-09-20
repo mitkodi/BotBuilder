@@ -329,7 +329,7 @@ namespace Microsoft.Bot.Builder.FormFlow
             internal OnCompletionAsyncDelegate<T> _completion = null;
             internal PromptAsyncDelegate _prompter = null;
             internal ILocalizer _resources = new Localizer() { Culture = CultureInfo.CurrentUICulture };
-
+            public IDialogContext Context { get; internal set; }
             public Form()
             {
             }

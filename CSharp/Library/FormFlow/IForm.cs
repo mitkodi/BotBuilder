@@ -75,5 +75,7 @@ namespace Microsoft.Bot.Builder.FormFlow
         internal abstract IReadOnlyList<IStep<T>> Steps { get; }
         internal abstract OnCompletionAsyncDelegate<T> Completion { get; }
         internal abstract Task<FormPrompt> Prompt(IDialogContext context, FormPrompt prompt);
+
+        public IDialogContext Context { get; internal set; }
     }   
 }

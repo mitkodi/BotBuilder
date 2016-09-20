@@ -269,6 +269,7 @@ namespace Microsoft.Bot.Builder.FormFlow
 
         public async Task MessageReceived(IDialogContext context, IAwaitable<Connector.IMessageActivity> toBot)
         {
+            _form.Context = context;
             try
             {
                 var toBotText = (toBot != null ? (await toBot).Text : null);
