@@ -8,7 +8,7 @@
         "bin/Debug/Microsoft.Bot.Builder.dll": {}
       },
       "runtime": {
-        "../packages/Autofac.3.5.2/lib/net40/Autofac.dll": {},
+        "../../../../../.nuget/Autofac.4.1.0/lib/net45/Autofac.dll": {},
         "../packages/Chronic.Signed.0.3.2/lib/net40/Chronic.dll": {},
         "../packages/Microsoft.AspNet.WebApi.Client.5.2.3/lib/net45/System.Net.Http.Formatting.dll": {},
         "../packages/Microsoft.AspNet.WebApi.Core.5.2.3/lib/net45/System.Web.Http.dll": {},

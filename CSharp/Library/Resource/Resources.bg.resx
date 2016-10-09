@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CommandBack" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="CommandBackHelp" xml:space="preserve">
+    <value>Назад: Върни се към предишния въпрос.</value>
+  </data>
+  <data name="CommandBackTerms" xml:space="preserve">
+    <value>назад;върни;предишен</value>
+  </data>
+  <data name="CommandHelp" xml:space="preserve">
+    <value>Помощ</value>
+  </data>
+  <data name="CommandHelpHelp" xml:space="preserve">
+    <value>Помощ: Покажи вариантите на възможните отговори.</value>
+  </data>
+  <data name="CommandHelpTerms" xml:space="preserve">
+    <value>помощ;варианти;\?;help</value>
+  </data>
+  <data name="CommandQuit" xml:space="preserve">
+    <value>Излез</value>
+  </data>
+  <data name="CommandQuitHelp" xml:space="preserve">
+    <value>Излез: Излез, без да завършиш попълването на формуляра.</value>
+  </data>
+  <data name="CommandQuitTerms" xml:space="preserve">
+    <value>излез;стоп;край;прекрати;стига;чао;довиждане;достатъчно</value>
+  </data>
+  <data name="CommandReset" xml:space="preserve">
+    <value>Започни отначало</value>
+  </data>
+  <data name="CommandResetHelp" xml:space="preserve">
+    <value>Отначало: Започни попълването на формуляра отначало. (Предишните Ви отговори ще бъдат съхранени.)</value>
+  </data>
+  <data name="CommandResetTerms" xml:space="preserve">
+    <value>отначало;започни отново;започни наново;наново</value>
+  </data>
+  <data name="CommandStatus" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="CommandStatusHelp" xml:space="preserve">
+    <value>Статус: Покажи докъде съм стигнал с попълването на формуляра.</value>
+  </data>
+  <data name="CommandStatusTerms" xml:space="preserve">
+    <value>статус;състояние;докъде съм;до\s?тук;до\s?сега</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>Потвърждение</value>
+  </data>
+  <data name="DefaultChoiceLastSeparator" xml:space="preserve">
+    <value>, или </value>
+  </data>
+  <data name="DefaultLastSeparator" xml:space="preserve">
+    <value>, и </value>
+  </data>
+  <data name="LanguageArticles" xml:space="preserve">
+    <value>един;една;едно</value>
+  </data>
+  <data name="LanguageStopWords" xml:space="preserve">
+    <value>а;аз;ако;ала;бе;без;беше;би;бивш;бивша;бил;била;били;било;бъдат;бъде;бяха;в;вас;ваш;ваша;вашият;веднъж;вече;взема;ви;вие;виж;винаги;включително;вместо;все;всеки;всички;всичко;вследствие;всъщност;всяка;втори;във;въпреки;върху;вътре;ги;главно;го;да;дава;даден;далеч;далече;дали;два;двама;двамата;две;двете;ден;до;докато;дори;доста;друг;друга;другаде;други;е;едва;един;една;едно;ето;за;зад;заедно;заради;затова;защо;защото;и;из;извън;или;им;има;имат;име;именно;й;как;каква;какво;както;какъв;като;кога;когато;което;които;кой;който;колко;която;къде;където;към;ли;май;макар;малцина;ме;между;междувременно;мен;ми;много;мнозина;мога;могат;може;мой;моят;моята;моето;моля;момента;му;на;навсякъде;навътре;нагоре;над;надолу;назад;най;направи;напред;например;нас;наскоро;настрана;наш;не;него;негов;неин;нещо;нея;ни;ние;никой;нито;нищо;но;някак;някои;някой;няколко;някъде;няма;обаче;около;освен;особен;особено;от;отвъд;отгоре;отдолу;отколкото;откъдето;отново;относно;оттам;ох;още;пак;по;повече;повечето;под;поне;поради;после;последен;почти;прав;прави;правя;пред;преди;през;при;пряко;пък;първата;първи;първо;пъти;с;са;сам;само;се;сега;си;скоро;след;сме;собствен;според;сред;срещу;сте;съм;със;също;т.н.;тази;така;такива;такъв;там;твой;те;тези;техен;техни;ти;то;това;тогава;този;той;толкова;три;трябва;тук;тъй;тя;тях;у;че;често;чрез;цяло;ще;щом;щеше;щях;щяха;я</value>
+  </data>
+  <data name="MatchCurrentChoice" xml:space="preserve">
+    <value>Запази текущото (".");без промяна;.;същото;запази;текущото</value>
+  </data>
+  <data name="MatchNo" xml:space="preserve">
+    <value>Не;н;2;тц</value>
+  </data>
+  <data name="MatchNoPreference" xml:space="preserve">
+    <value>Нямам предпочитание;не;нищо;все едно;няма значение</value>
+  </data>
+  <data name="MatchYes" xml:space="preserve">
+    <value>Да;д;точно;ок;добре;ok;y;1;супер</value>
+  </data>
+  <data name="Navigation" xml:space="preserve">
+    <value>Име на поле</value>
+  </data>
+  <data name="PromptRetry" xml:space="preserve">
+    <value>Не разбрах. Кажи нещо в отговор.</value>
+  </data>
+  <data name="TemplateBool" xml:space="preserve">
+    <value>Желаете ли {&amp;}? {||}</value>
+  </data>
+  <data name="TemplateBoolHelp" xml:space="preserve">
+    <value>Моля въведете "да" или "не"{?, {0}}.</value>
+    <comment>0-current choice, 1-no preference</comment>
+  </data>
+  <data name="TemplateClarify" xml:space="preserve">
+    <value>С "{0}" за {&amp;} имате предвид {||}</value>
+    <comment>0-term being clarified</comment>
+  </data>
+  <data name="TemplateConfirmation" xml:space="preserve">
+    <value>Това ли е вашия избор?
+{*}</value>
+  </data>
+  <data name="TemplateCurrentChoice" xml:space="preserve">
+    <value>(текущ избор: {})</value>
+  </data>
+  <data name="TemplateDateTime" xml:space="preserve">
+    <value>Моля въведете дата и час за {&amp;} {||}</value>
+  </data>
+  <data name="TemplateDateTimeHelp" xml:space="preserve">
+    <value>Моля въведете дата или час {?, {0}}{?, {1}}.</value>
+    <comment>0-current choice, 1-no preference</comment>
+  </data>
+  <data name="TemplateDouble" xml:space="preserve">
+    <value>Моля въедете число {?между {0:F1} и {1:F1}} за {&amp;} {||}</value>
+    <comment>0-min, 1-max</comment>
+  </data>
+  <data name="TemplateDoubleHelp" xml:space="preserve">
+    <value>Моля въведете число{? между {2:F1} и {3:F1}}{?, {0}}{?, {1}}.</value>
+    <comment>0-current choice, 1-no preference, 2-min, 3-max</comment>
+  </data>
+  <data name="TemplateEnumManyNumberHelp" xml:space="preserve">
+    <value>Можете да въведете едно или повече числа {0}-{1} или думи от описанията. ({2})</value>
+    <comment>0-min, 1-max and 2-enumerated descriptions</comment>
+  </data>
+  <data name="TemplateEnumManyWordHelp" xml:space="preserve">
+    <value>Можете да въведете една или няколко думи от описанията. ({2})</value>
+    <comment>2-enumerated descriptions</comment>
+  </data>
+  <data name="TemplateEnumOneNumberHelp" xml:space="preserve">
+    <value>Можете да въведете число {0}-{1} или думи от описанието. ({2})</value>
+    <comment>0-min, 1-max and 2-enumerated descriptions</comment>
+  </data>
+  <data name="TemplateEnumOneWordHelp" xml:space="preserve">
+    <value>Можете да въведете някоя дума от описанието. ({2})</value>
+    <comment>2-enumerated descriptions</comment>
+  </data>
+  <data name="TemplateEnumSelectMany" xml:space="preserve">
+    <value>Моля изберете една или няколко възможности за {&amp;} {||}</value>
+  </data>
+  <data name="TemplateEnumSelectOne" xml:space="preserve">
+    <value>Моля изберете {&amp;} {||}</value>
+  </data>
+  <data name="TemplateFeedback" xml:space="preserve">
+    <value>За {&amp;} разбрах {}. {?"{0}" не е възможен избор.}</value>
+    <comment>0-not understood term</comment>
+  </data>
+  <data name="TemplateHelp" xml:space="preserve">
+    <value>Вие попълвате полето за {&amp;}.  Възможни отговори:
+{0}
+{1}</value>
+    <comment>0-recognizer help, 1-command help</comment>
+  </data>
+  <data name="TemplateHelpClarify" xml:space="preserve">
+    <value>Вие уточнявате значението на {&amp;}.  Възможни отговори:
+{0}
+{1}</value>
+    <comment>0-recognizer help, 1-command help</comment>
+  </data>
+  <data name="TemplateHelpConfirm" xml:space="preserve">
+    <value>Моля отговорете на въпроса.  Възможни отговори:
+{0}
+{1}</value>
+    <comment>0-recognizer help, 1-command help</comment>
+  </data>
+  <data name="TemplateHelpNavigation" xml:space="preserve">
+    <value>Изберете, кое да промените.  Възможни отговори:
+{0}
+{1}</value>
+    <comment>0-recognizer help, 1-command help</comment>
+  </data>
+  <data name="TemplateInteger" xml:space="preserve">
+    <value>Моля за {&amp;} въведете цяло число{? между {0} и {1}} {||}</value>
+    <comment>0-min, 1-max</comment>
+  </data>
+  <data name="TemplateIntegerHelp" xml:space="preserve">
+    <value>Можете да въведете число {? между {2} и {3}}{?, {0}}{?, {1}}.</value>
+    <comment>0-current choice, 1-no preference, 2-min, 3-max</comment>
+  </data>
+  <data name="TemplateNavigation" xml:space="preserve">
+    <value>Какво желаете да промените? {||}</value>
+  </data>
+  <data name="TemplateNavigationCommandHelp" xml:space="preserve">
+    <value>Можете да преминете към друго поле, като въведете неговото име. ({0}).</value>
+    <comment>0-list of field names</comment>
+  </data>
+  <data name="TemplateNavigationHelp" xml:space="preserve">
+    <value>Въведете {?число от {0} до {1} или} име на поле.</value>
+    <comment>0-min, 1-max</comment>
+  </data>
+  <data name="TemplateNoPreference" xml:space="preserve">
+    <value>Без предпочитчние</value>
+  </data>
+  <data name="TemplateNotUnderstood" xml:space="preserve">
+    <value>"{0}" не е възможен избор за {&amp;}.</value>
+    <comment>0-is not understood term</comment>
+  </data>
+  <data name="TemplateString" xml:space="preserve">
+    <value>Моля въведете {&amp;} {||}</value>
+  </data>
+  <data name="TemplateStringHelp" xml:space="preserve">
+    <value>Можете да напишете виско, което пожелаете (използвайте кавички, за да се възприеме като текст){?, {0}}{?, {1}}.</value>
+    <comment>0-current choice, 1-no preference</comment>
+  </data>
+  <data name="TemplateUnspecified" xml:space="preserve">
+    <value>Не е указано</value>
+  </data>
+  <data name="TooManyAttempts" xml:space="preserve">
+    <value>твърде много опити</value>
+  </data>
+  <data name="UnhandledExceptionToUser" xml:space="preserve">
+    <value>Съжалявам, възникна проблем в кода.</value>
+  </data>
+  <data name="UserProfileDeleted" xml:space="preserve">
+    <value>Потребителският профил е изтрит!</value>
+  </data>
+</root>
