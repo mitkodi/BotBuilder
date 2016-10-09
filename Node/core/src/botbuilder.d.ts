@@ -1435,7 +1435,7 @@ export class ThumbnailCard implements IIsAttachment {
     toAttachment(): IAttachment;
 }
 
-/** Card builder class that simplifies building hero cards. Hero cards contain the same information as a thumbnail card, just with a larger more pronounced layout for the cards imagess. */
+/** Card builder class that simplifies building hero cards. Hero cards contain the same information as a thumbnail card, just with a larger more pronounced layout for the cards images. */
 export class HeroCard extends ThumbnailCard {
 
     /** 
@@ -1964,6 +1964,12 @@ export class IntentDialog extends Dialog {
      * @param dialogArgs (Optional) arguments to pass the dialog that started when `dialogId` is a _{string}_.
      */
     onDefault(dialogId: string|IDialogWaterfallStep[]|IDialogWaterfallStep, dialogArgs?: any): IntentDialog;
+
+    /**
+     * Adds a new recognizer plugin to the intent dialog.
+     * @param plugin The recognizer to add. 
+     */
+    recognizer(plugin: IIntentRecognizer): IntentDialog;
 }
 
 /**
