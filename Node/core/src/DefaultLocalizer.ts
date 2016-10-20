@@ -44,21 +44,14 @@ export class DefaultLocalizer implements ILocalizer {
     private static filesParsedMap: any = {};
     private static map: any = {};
 
-    constructor() {        
-    }
-
-    initialize(settings?: ILocalizerSettings) {
-        if (!settings) {
-            return;
-        }
-
+    constructor(settings: IDefaultLocalizerSettings = {}) {        
         if (settings.botLocalePath) {
             this.botLocalePath = settings.botLocalePath.toLowerCase();
             if (this.botLocalePath.charAt(this.botLocalePath.length - 1) != '/') {
                 this.botLocalePath = this.botLocalePath + "/";
             }
         } else {
-            this.botLocalePath = "./"
+            this.botLocalePath = "./locale/";
         }
         
         if (settings.defaultLocale) {
@@ -168,7 +161,7 @@ export class DefaultLocalizer implements ILocalizer {
                 
         fs.access(path, (err) => {
             if (err && err.code === 'ENOENT') {
-                logger.warn(null, "localizer::couldn't find directory: %s", path);                                
+                logger.debug(null, "localizer::couldn't find directory: %s", path);                                
                 cb(null, -1);
             } else if (err) {
                 cb(err, -1);
@@ -207,7 +200,7 @@ export class DefaultLocalizer implements ILocalizer {
         });
     }
     
-    public load(locale: string, done: ErrorCallback): void {
+    public load(locale: string, done?: ErrorCallback): void {
         if (locale) {
             locale = locale.toLowerCase();
         }
@@ -217,7 +210,9 @@ export class DefaultLocalizer implements ILocalizer {
 
         if (DefaultLocalizer.localeRequests[localeRequestKey]) {
             logger.debug("localizer::already loaded requested locale: %s", localeRequestKey);                                               
-            done(null);
+            if (done) {
+                done(null);
+            }
             return;
         }
 
@@ -280,12 +275,12 @@ export class DefaultLocalizer implements ILocalizer {
             
         ],
         (err, results) => {
-            if (err) {
-                done(err);
-            } else {
+            if (!err) {
                 DefaultLocalizer.localeRequests[localeRequestKey] = true;
                 logger.debug("localizer::loaded requested locale: %s", localeRequestKey);                            
-                done();
+            }
+            if (done) {
+                done(err);
             }
         });
     }

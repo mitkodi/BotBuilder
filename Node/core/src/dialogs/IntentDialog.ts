@@ -108,7 +108,8 @@ export class IntentDialog extends dlg.Dialog {
 
     public replyReceived(session: ses.Session, recognizeResult?: dlg.IRecognizeResult): void {
         if (!recognizeResult) {
-            this.recognize({ message: session.message, dialogData: session.dialogData, activeDialog: true }, (err, result) => {
+            var locale = session.preferredLocale();
+            this.recognize({ message: session.message, locale: locale, dialogData: session.dialogData, activeDialog: true }, (err, result) => {
                 if (!err) {
                     this.invokeIntent(session, <IIntentRecognizerResult>result);
                 } else {
@@ -261,7 +262,8 @@ export class IntentDialog extends dlg.Dialog {
             if (!err) {
                 done(null, result);
             } else {
-                done(err instanceof Error ? err : new Error(err.toString()), null);
+                var m = err.toString();
+                done(err instanceof Error ? err : new Error(m), null);
             }
         });
     }
@@ -314,7 +316,8 @@ export class IntentDialog extends dlg.Dialog {
     }
 
     private emitError(session: ses.Session, err: Error): void {
-        err = err instanceof Error ? err : new Error(err.toString());
+        var m = err.toString();
+        err = err instanceof Error ? err : new Error(m);
         session.error(err);
     }
 }
