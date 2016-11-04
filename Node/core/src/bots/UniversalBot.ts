@@ -43,6 +43,7 @@ import utils = require('../utils');
 import logger = require('../logger');
 import async = require('async');
 import events = require('events');
+import { DefaultLocalizer } from '../DefaultLocalizer';
 
 export interface IUniversalBotSettings {
     defaultDialogId?: string;
@@ -92,10 +93,12 @@ export class UniversalBot extends events.EventEmitter {
     private mwReceive = <IEventMiddleware[]>[];
     private mwSend = <IEventMiddleware[]>[];
     private mwSession = <ses.ISessionMiddleware[]>[]; 
+    private localizer: DefaultLocalizer;
     
     
     constructor(connector?: IConnector, settings?: IUniversalBotSettings) {
         super();
+        this.lib.localePath('./locale/');
         this.lib.library(dl.systemLib);
         if (settings) {
             for (var name in settings) {
@@ -116,6 +119,12 @@ export class UniversalBot extends events.EventEmitter {
     
     public set(name: string, value: any): this {
         (<any>this.settings)[name] = value;
+        if (value && name === 'localizerSettings') {
+            var settings = <IDefaultLocalizerSettings>value;
+            if (settings.botLocalePath) {
+                this.lib.localePath(settings.botLocalePath);
+            }
+        }
         return this;
     }
     
@@ -361,9 +370,14 @@ export class UniversalBot extends events.EventEmitter {
         //   follows the same flow as for reactive messages.
         var loadedData: bs.IBotStorageData;
         this.getStorageData(storageCtx, (data) => {
+            // Create localizer on first access
+            if (!this.localizer) {
+                var defaultLocale = this.settings.localizerSettings ? this.settings.localizerSettings.defaultLocale : null;
+                this.localizer = new DefaultLocalizer(this.lib, defaultLocale);
+            }
             // Initialize session
             var session = new ses.Session({
-                localizerSettings: this.settings.localizerSettings,
+                localizer: this.localizer,
                 autoBatchDelay: this.settings.autoBatchDelay,
                 library: this.lib,
                 actions: this.actions,
