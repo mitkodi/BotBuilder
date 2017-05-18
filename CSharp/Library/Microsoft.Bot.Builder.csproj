@@ -189,12 +189,24 @@
     <EmbeddedResource Include="Resource\Resources.ar.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resource\Resources.bg.resx" />
-    <EmbeddedResource Include="Resource\Resources.de-DE.resx" />
-    <EmbeddedResource Include="Resource\Resources.cs.resx" />
-    <EmbeddedResource Include="Resource\Resources.en.resx" />
-    <EmbeddedResource Include="Resource\Resources.es.resx" />
-    <EmbeddedResource Include="Resource\Resources.fa.resx" />
+    <EmbeddedResource Include="Resource\Resources.bg.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource\Resources.de-DE.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource\Resources.cs.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource\Resources.en.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource\Resources.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource\Resources.fa.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resource\Resources.fr.resx" />
     <EmbeddedResource Include="Resource\Resources.it.resx" />
     <EmbeddedResource Include="Resource\Resources.ja.resx" />

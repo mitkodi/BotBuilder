@@ -79,10 +79,10 @@
     <value>Не;н;2;тц</value>
   </data>
   <data name="MatchNoPreference" xml:space="preserve">
-    <value>Нямам предпочитание;не;нищо;все едно;няма значение</value>
+    <value>Без предпочитание;Нямам предпочитание;не;нищо;все(\s+ми е)?\s+едно;няма значение;нямам</value>
   </data>
   <data name="MatchYes" xml:space="preserve">
-    <value>Да;д;точно;ок;добре;ok;y;1;супер</value>
+    <value>Да;д;точно;ок;добре;ok;y;1;супер;може;аха</value>
   </data>
   <data name="Navigation" xml:space="preserve">
     <value>Име на поле</value>
@@ -193,7 +193,7 @@
     <comment>0-min, 1-max</comment>
   </data>
   <data name="TemplateNoPreference" xml:space="preserve">
-    <value>Без предпочитчние</value>
+    <value>Без предпочитание</value>
   </data>
   <data name="TemplateNotUnderstood" xml:space="preserve">
     <value>"{0}" не е възможен избор за {&amp;}.</value>

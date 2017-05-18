@@ -114,11 +114,11 @@
         </trans-unit>
         <trans-unit id="MatchNoPreference" translate="yes" xml:space="preserve">
           <source>No Preference;no;none;I don'?t care</source>
-          <target state="translated">Нямам предпочитание;не;нищо;все едно;няма значение</target>
+          <target state="translated">Без предпочитание;Нямам предпочитание;не;нищо;все(\s+ми е)?\s+едно;няма значение;нямам</target>
         </trans-unit>
         <trans-unit id="MatchYes" translate="yes" xml:space="preserve">
           <source>Yes;y;sure;ok;yep;1</source>
-          <target state="translated">Да;д;точно;ок;добре;ok;y;1;супер</target>
+          <target state="translated">Да;д;точно;ок;добре;ok;y;1;супер;може;аха</target>
         </trans-unit>
         <trans-unit id="Navigation" translate="yes" xml:space="preserve">
           <source>Field Name</source>
@@ -281,7 +281,7 @@
         </trans-unit>
         <trans-unit id="TemplateNoPreference" translate="yes" xml:space="preserve">
           <source>No Preference</source>
-          <target state="translated">Без предпочитчние</target>
+          <target state="translated">Без предпочитание</target>
         </trans-unit>
         <trans-unit id="TemplateNotUnderstood" translate="yes" xml:space="preserve">
           <source>"{0}" is not a {&amp;} option.</source>
