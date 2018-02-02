@@ -2,8 +2,7 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-namespace Microsoft.Bot.Connector
-{
+namespace Microsoft.Bot.Connector {
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -12,7 +11,6 @@ namespace Microsoft.Bot.Connector
     using Microsoft.Rest;
 
 
-    public static partial class StateClientExtensions
-    {
+    public static partial class StateClientExtensions {
     }
 }

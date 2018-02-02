@@ -1,22 +1,22 @@
-﻿using Microsoft.Rest;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
-namespace Microsoft.Bot.Connector
-{
-    public class MicrosoftAppCredentials : ServiceClientCredentials
-    {
+using Microsoft.Rest;
+using Newtonsoft.Json;
+
+
+using System.Configuration;
+using System.Diagnostics;
+using System.Runtime.Serialization;
+
+
+namespace Microsoft.Bot.Connector {
+    public class MicrosoftAppCredentials : ServiceClientCredentials {
         /// <summary>
         /// The key for Microsoft app Id.
         /// </summary>
@@ -32,18 +32,30 @@ namespace Microsoft.Bot.Connector
                                                                                             { "state.botframework.com", DateTime.MaxValue }
                                                                                         });
 
-        public MicrosoftAppCredentials(string appId = null, string password = null)
-        {
-            MicrosoftAppId = appId ?? ConfigurationManager.AppSettings[MicrosoftAppIdKey] ?? Environment.GetEnvironmentVariable(MicrosoftAppIdKey, EnvironmentVariableTarget.Process);
-            MicrosoftAppPassword = password ?? ConfigurationManager.AppSettings[MicrosoftAppPasswordKey] ?? Environment.GetEnvironmentVariable(MicrosoftAppPasswordKey, EnvironmentVariableTarget.Process);
+        protected static readonly ConcurrentDictionary<string, OAuthResponse> cache = new ConcurrentDictionary<string, OAuthResponse>();
+
+        public MicrosoftAppCredentials(string appId = null, string password = null) {
+            MicrosoftAppId = appId;
+            MicrosoftAppPassword = password;
+
+            if(appId == null)
+            {
+                MicrosoftAppId = ConfigurationManager.AppSettings[MicrosoftAppIdKey] ?? Environment.GetEnvironmentVariable(MicrosoftAppIdKey, EnvironmentVariableTarget.Process);
+            }
+
+            if(password == null)
+            {
+                MicrosoftAppPassword = ConfigurationManager.AppSettings[MicrosoftAppPasswordKey] ?? Environment.GetEnvironmentVariable(MicrosoftAppPasswordKey, EnvironmentVariableTarget.Process);
+            }
+
             TokenCacheKey = $"{MicrosoftAppId}-cache";
         }
 
         public string MicrosoftAppId { get; set; }
         public string MicrosoftAppPassword { get; set; }
 
-        public virtual string OAuthEndpoint { get { return "https://login.microsoftonline.com/common/oauth2/v2.0/token"; } }
-        public virtual string OAuthScope { get { return "https://graph.microsoft.com/.default"; } }
+        public virtual string OAuthEndpoint { get { return JwtConfig.ToChannelFromBotLoginUrl; } }
+        public virtual string OAuthScope { get { return JwtConfig.ToChannelFromBotOAuthScope; } }
 
         protected readonly string TokenCacheKey;
 
@@ -53,23 +65,32 @@ namespace Microsoft.Bot.Connector
         /// <param name="serviceUrl">The service url</param>
         /// <param name="expirationTime">The expiration time after which this service url is not trusted anymore</param>
         /// <remarks>If expiration time is not provided, the expiration time will DateTime.UtcNow.AddDays(1).</remarks>
-        public static void TrustServiceUrl(string serviceUrl, DateTime expirationTime = default(DateTime))
-        {
-            try
-            {
-                if (expirationTime == default(DateTime))
-                {
+        public static void TrustServiceUrl(string serviceUrl, DateTime expirationTime = default(DateTime)) {
+            try {
+                if (expirationTime == default(DateTime)) {
                     // by default the service url is valid for one day
-                    TrustedHostNames.AddOrUpdate(new Uri(serviceUrl).Host, DateTime.UtcNow.AddDays(1), (key, oldValue) => DateTime.UtcNow.AddDays(1));
+                    var extensionPeriod = TimeSpan.FromDays(1);
+                    TrustedHostNames.AddOrUpdate(new Uri(serviceUrl).Host, DateTime.UtcNow.Add(extensionPeriod), (key, oldValue) => {
+                        var newExpiration = DateTime.UtcNow.Add(extensionPeriod);
+                        // try not to override expirations that are greater than one day from now
+                        if (oldValue > newExpiration) {
+                            // make sure that extension can be added to oldValue and ArgumentOutOfRangeException
+                            // is not thrown
+                            if (oldValue >= DateTime.MaxValue.Subtract(extensionPeriod)) {
+                                newExpiration = oldValue;
+                            }
+                            else {
+                                newExpiration = oldValue.Add(extensionPeriod);
+                            }
+                        }
+                        return newExpiration;
+                    });
                 }
-                else
-                {
+                else {
                     TrustedHostNames.AddOrUpdate(new Uri(serviceUrl).Host, expirationTime, (key, oldValue) => expirationTime);
                 }
             }
-            catch (UriFormatException)
-            {
-                Trace.TraceWarning($"Service url {serviceUrl} is not a well formed Uri!");
+            catch (Exception) {
             }
         }
 
@@ -78,11 +99,9 @@ namespace Microsoft.Bot.Connector
         /// </summary>
         /// <param name="serviceUrl">The service url</param>
         /// <returns>True if the host of the service url is trusted; False otherwise.</returns>
-        public static bool IsTrustedServiceUrl(string serviceUrl)
-        {
+        public static bool IsTrustedServiceUrl(string serviceUrl) {
             Uri uri;
-            if (Uri.TryCreate(serviceUrl, UriKind.Absolute, out uri))
-            {
+            if (Uri.TryCreate(serviceUrl, UriKind.Absolute, out uri)) {
                 return TrustedUri(uri);
             }
             return false;
@@ -92,40 +111,46 @@ namespace Microsoft.Bot.Connector
         /// Apply the credentials to the HTTP request.
         /// </summary>
         /// <param name="request">The HTTP request.</param><param name="cancellationToken">Cancellation token.</param>
-        public override async Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            if (ShouldSetToken(request))
-            {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetTokenAsync());
+        public override async Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+            if (ShouldSetToken(request)) {
+                string token = await this.GetTokenAsync().ConfigureAwait(false);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            await base.ProcessHttpRequestAsync(request, cancellationToken);
+            await base.ProcessHttpRequestAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<string> GetTokenAsync(bool forceRefresh = false)
-        {
-            string token;
-            var oAuthToken = (OAuthResponse)System.Web.HttpRuntime.Cache.Get(TokenCacheKey);
-            if (oAuthToken != null && !forceRefresh && TokenNotExpired(oAuthToken))
-            {
-                token = oAuthToken.access_token;
+
+
+        public async Task<string> GetTokenAsync(bool forceRefresh = false) {
+            OAuthResponse oAuthToken;
+            bool tokenInCache = cache.TryGetValue(TokenCacheKey, out oAuthToken);
+            string token = tokenInCache ? oAuthToken.access_token : null;
+            if (!tokenInCache || !TokenNotExpired(oAuthToken) || forceRefresh) {
+                token = await RefreshAndStoreToken().ConfigureAwait(false);
             }
-            else
-            {
-                oAuthToken = await RefreshTokenAsync().ConfigureAwait(false);
-                System.Web.HttpRuntime.Cache.Insert(TokenCacheKey,
-                                                    oAuthToken,
-                                                    null,
-                                                    DateTime.UtcNow.AddSeconds(oAuthToken.expires_in),
-                                                    System.Web.Caching.Cache.NoSlidingExpiration);
-                token = oAuthToken.access_token;
+            else if (!TokenWithinSafeTimeLimits(oAuthToken)) {
+                string oldToken = token;
+                token = await RefreshAndStoreToken().ConfigureAwait(false);
+                if (string.IsNullOrEmpty(token)) {
+                    token = oldToken;
+                }
             }
             return token;
         }
 
-        private bool ShouldSetToken(HttpRequestMessage request)
-        {
-            if (TrustedUri(request.RequestUri))
-            {
+        private async Task<string> RefreshAndStoreToken() {
+            try {
+                OAuthResponse oAuthToken = await RefreshTokenAsync().ConfigureAwait(false);
+                cache.AddOrUpdate(TokenCacheKey, oAuthToken, (key, oldToken) => oAuthToken);
+                return oAuthToken.access_token;
+            }
+            catch (OAuthException) {
+                throw;
+            }
+        }
+
+        private bool ShouldSetToken(HttpRequestMessage request) {
+            if (TrustedUri(request.RequestUri)) {
                 return true;
             }
 
@@ -133,49 +158,66 @@ namespace Microsoft.Bot.Connector
             return false;
         }
 
-        private static bool TrustedUri(Uri uri)
-        {
+        private static bool TrustedUri(Uri uri) {
             DateTime trustedServiceUrlExpiration;
-            if (TrustedHostNames.TryGetValue(uri.Host, out trustedServiceUrlExpiration))
-            {
+            if (TrustedHostNames.TryGetValue(uri.Host, out trustedServiceUrlExpiration)) {
                 // check if the trusted service url is still valid
-                if (trustedServiceUrlExpiration > DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(5)))
-                {
+                if (trustedServiceUrlExpiration > DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(5))) {
                     return true;
                 }
             }
             return false;
         }
 
-        private async Task<OAuthResponse> RefreshTokenAsync()
-        {
-            OAuthResponse oauthResponse;
+        [Serializable]
+        public sealed class OAuthException : Exception {
+            public OAuthException(string body, Exception inner)
+                : base(body, inner) {
+            }
 
-            using (HttpClient httpClient = new HttpClient())
+            private OAuthException(SerializationInfo info, StreamingContext context)
+                : base(info, context)
             {
-                HttpResponseMessage response = await httpClient.PostAsync(OAuthEndpoint, new FormUrlEncodedContent(new Dictionary<string, string>()
+            }
+        }
+
+        private async Task<OAuthResponse> RefreshTokenAsync() {
+            using (HttpClient httpClient = new HttpClient()) {
+                var content = new FormUrlEncodedContent(new Dictionary<string, string>()
                 {
                     { "grant_type", "client_credentials" },
                     { "client_id", MicrosoftAppId },
                     { "client_secret", MicrosoftAppPassword },
                     { "scope", OAuthScope }
-                })).ConfigureAwait(false);
+                });
 
-                string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                oauthResponse = JsonConvert.DeserializeObject<OAuthResponse>(body);
-                oauthResponse.expiration_time = DateTime.UtcNow.AddSeconds(oauthResponse.expires_in).Subtract(TimeSpan.FromSeconds(60));
-                return oauthResponse;
+                using (var response = await httpClient.PostAsync(OAuthEndpoint, content).ConfigureAwait(false)) {
+                    string body = null;
+                    try {
+                        response.EnsureSuccessStatusCode();
+                        body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        var oauthResponse = JsonConvert.DeserializeObject<OAuthResponse>(body);
+                        oauthResponse.expiration_time = DateTime.UtcNow.AddSeconds(oauthResponse.expires_in).Subtract(TimeSpan.FromSeconds(60));
+                        return oauthResponse;
+                    }
+                    catch (Exception error) {
+                        throw new OAuthException(body ?? response.ReasonPhrase, error);
+                    }
+                }
             }
         }
 
-        private bool TokenNotExpired(OAuthResponse token)
-        {
+        private bool TokenNotExpired(OAuthResponse token) {
             return token.expiration_time > DateTime.UtcNow;
         }
 
-        private class OAuthResponse
-        {
+        private bool TokenWithinSafeTimeLimits(OAuthResponse token) {
+            int secondsToHalfwayExpire = Math.Min(token.expires_in / 2, 1800);
+            TimeSpan TimeToExpiration = token.expiration_time - DateTime.UtcNow;
+            return TimeToExpiration.TotalSeconds > secondsToHalfwayExpire;
+        }
+
+        protected class OAuthResponse {
             public string token_type { get; set; }
             public int expires_in { get; set; }
             public string access_token { get; set; }

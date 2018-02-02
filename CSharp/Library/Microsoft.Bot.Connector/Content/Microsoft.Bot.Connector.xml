@@ -44,6 +44,43 @@
             Signin button
             </summary>
         </member>
+        <member name="P:Microsoft.Bot.Connector.BotAuthentication.MicrosoftAppId">
+            <summary>
+            Microsoft AppId for the bot 
+            </summary>
+            <remarks>
+            Needs to be used with MicrosoftAppPassword.  Ignored if CredentialProviderType is specified.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Bot.Connector.BotAuthentication.MicrosoftAppPassword">
+            <summary>
+            Microsoft AppPassword for the bot (needs to be used with MicrosoftAppId)
+            </summary>
+            <remarks>
+            Needs to be used with MicrosoftAppId. Ignored if CredentialProviderType is specified.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Bot.Connector.BotAuthentication.MicrosoftAppIdSettingName">
+            <summary>
+            Name of Setting in web.config which has the Microsoft AppId for the bot 
+            </summary>
+            <remarks>
+            Needs to be used with MicrosoftAppPasswordSettingName. Ignored if CredentialProviderType is specified.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Bot.Connector.BotAuthentication.MicrosoftAppPasswordSettingName">
+            <summary>
+            Name of Setting in web.config which has the Microsoft App Password for the bot 
+            </summary>
+            <remarks>
+            Needs to be used with MicrosoftAppIdSettingName. Ignored if CredentialProviderType is specified.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Bot.Connector.BotAuthentication.CredentialProviderType">
+            <summary>
+            Type which implements ICredentialProvider interface to allow multiple bot AppIds to be registered for the same endpoint
+            </summary>
+        </member>
         <member name="T:Microsoft.Bot.Connector.ConversationResourceResponse">
             <summary>
             A response containing a resource
@@ -136,6 +173,45 @@
             </summary>
             <param name="claimsIdentity"></param>
             <returns></returns>
+        </member>
+        <member name="T:Microsoft.Bot.Connector.ErrorResponseException">
+            <summary>
+            Exception thrown for an invalid response with ErrorResponse
+            information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Bot.Connector.ErrorResponseException.Request">
+            <summary>
+            Gets information about the associated HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Bot.Connector.ErrorResponseException.Response">
+            <summary>
+            Gets information about the associated HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Bot.Connector.ErrorResponseException.Body">
+            <summary>
+            Gets or sets the body object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Bot.Connector.ErrorResponseException.#ctor">
+            <summary>
+            Initializes a new instance of the ErrorResponseException class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Bot.Connector.ErrorResponseException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the ErrorResponseException class.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="M:Microsoft.Bot.Connector.ErrorResponseException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the ErrorResponseException class.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="innerException">Inner exception.</param>
         </member>
         <member name="M:Microsoft.Bot.Connector.ICredentialProvider.IsValidAppIdAsync(System.String)">
             <summary>
@@ -1164,53 +1240,33 @@
             This action will be activated when user taps on the card itself
             </summary>
         </member>
-        <member name="P:Microsoft.Bot.Connector.BotAuthentication.MicrosoftAppId">
+        <member name="T:Microsoft.Bot.Connector.BotAuthenticator.EndorsementsValidator">
             <summary>
-            Microsoft AppId for the bot 
+            The endorsements validator delegate. 
             </summary>
-            <remarks>
-            Needs to be used with MicrosoftAppPassword.  Ignored if CredentialProviderType is specified.
-            </remarks>
+            <param name="activities"> The activities.</param>
+            <param name="endorsements"> The endorsements used for validation.</param>
+            <returns>true if validation passes; false otherwise.</returns>
         </member>
-        <member name="P:Microsoft.Bot.Connector.BotAuthentication.MicrosoftAppPassword">
-            <summary>
-            Microsoft AppPassword for the bot (needs to be used with MicrosoftAppId)
-            </summary>
-            <remarks>
-            Needs to be used with MicrosoftAppId. Ignored if CredentialProviderType is specified.
-            </remarks>
-        </member>
-        <member name="P:Microsoft.Bot.Connector.BotAuthentication.MicrosoftAppIdSettingName">
-            <summary>
-            Name of Setting in web.config which has the Microsoft AppId for the bot 
-            </summary>
-            <remarks>
-            Needs to be used with MicrosoftAppPasswordSettingName. Ignored if CredentialProviderType is specified.
-            </remarks>
-        </member>
-        <member name="P:Microsoft.Bot.Connector.BotAuthentication.MicrosoftAppPasswordSettingName">
-            <summary>
-            Name of Setting in web.config which has the Microsoft App Password for the bot 
-            </summary>
-            <remarks>
-            Needs to be used with MicrosoftAppIdSettingName. Ignored if CredentialProviderType is specified.
-            </remarks>
-        </member>
-        <member name="P:Microsoft.Bot.Connector.BotAuthentication.CredentialProviderType">
-            <summary>
-            Type which implements ICredentialProvider interface to allow multiple bot AppIds to be registered for the same endpoint
-            </summary>
-        </member>
-        <member name="M:Microsoft.Bot.Connector.BotAuthenticator.#ctor(System.String,System.String)">
+        <member name="M:Microsoft.Bot.Connector.BotAuthenticator.#ctor(System.String,System.String,Microsoft.Bot.Connector.BotAuthenticator.EndorsementsValidator)">
             <summary>
             Creates an instance of bot authenticator. 
             </summary>
             <param name="microsoftAppId"> The Microsoft app Id.</param>
             <param name="microsoftAppPassword"> The Microsoft app password.</param>
+            <param name="validator"> The endorsements validator.</param>
             <remarks> This constructor sets the <see cref="F:Microsoft.Bot.Connector.BotAuthenticator.openIdConfigurationUrl"/> to 
             <see cref="F:Microsoft.Bot.Connector.JwtConfig.ToBotFromChannelOpenIdMetadataUrl"/>  and doesn't disable 
             the self issued tokens used by emulator.
             </remarks>
+        </member>
+        <member name="M:Microsoft.Bot.Connector.BotAuthenticator.GenerateUnauthorizedResponse(System.Net.Http.HttpRequestMessage,System.String)">
+            <summary>
+            Generates <see cref="F:System.Net.HttpStatusCode.Unauthorized"/> response for the request.
+            </summary>
+            <param name="request">The request.</param>
+            <param name="reason">The reason phrase for unauthorized status code.</param>
+            <returns>A response with status code unauthorized.</returns>
         </member>
         <member name="M:Microsoft.Bot.Connector.BotAuthenticator.TryAuthenticateAsync(System.Net.Http.HttpRequestMessage,System.Collections.Generic.IEnumerable{Microsoft.Bot.Connector.IActivity},System.Threading.CancellationToken)">
             <summary>
@@ -1222,12 +1278,14 @@
             <param name="token"> The cancellation token.</param>
             <returns></returns>
         </member>
-        <member name="M:Microsoft.Bot.Connector.BotAuthenticator.GenerateUnauthorizedResponse(System.Net.Http.HttpRequestMessage)">
+        <member name="M:Microsoft.Bot.Connector.BotAuthenticator.AuthenticateAsync(System.Net.Http.HttpRequestMessage,System.Collections.Generic.IEnumerable{Microsoft.Bot.Connector.IActivity},System.Threading.CancellationToken)">
             <summary>
-            Generates <see cref="F:System.Net.HttpStatusCode.Unauthorized"/> response for the request.
+            Authenticates the request and returns the IdentityToken.
             </summary>
-            <param name="request">The request.</param>
-            <returns>A response with status code unauthorized.</returns>
+            <param name="request"> The request that should be authenticated.</param>
+            <param name="activities"> The activities extracted from request.</param>
+            <param name="token"> The cancellation token.</param>
+            <returns> The <see cref="T:Microsoft.Bot.Connector.IdentityToken"/>.</returns>
         </member>
         <member name="T:Microsoft.Bot.Connector.ConversationsExtensions">
             <summary>
@@ -1760,35 +1818,56 @@
             Configuration for JWT tokens
             </summary>
         </member>
+        <member name="F:Microsoft.Bot.Connector.JwtConfig.ToChannelFromBotLoginUrl">
+            <summary>
+            TO CHANNEL FROM BOT: Login URL
+            </summary>
+        </member>
+        <member name="F:Microsoft.Bot.Connector.JwtConfig.ToChannelFromBotOAuthScope">
+            <summary>
+            TO CHANNEL FROM BOT: OAuth scope to request
+            </summary>
+        </member>
         <member name="F:Microsoft.Bot.Connector.JwtConfig.ToBotFromChannelOpenIdMetadataUrl">
             <summary>
             TO BOT FROM CHANNEL: OpenID metadata document for tokens coming from MSA
             </summary>
         </member>
-        <member name="M:Microsoft.Bot.Connector.JwtConfig.GetToBotFromChannelTokenValidationParameters(System.IdentityModel.Tokens.AudienceValidator)">
+        <member name="F:Microsoft.Bot.Connector.JwtConfig.ToBotFromChannelTokenValidationParameters">
             <summary>
             TO BOT FROM CHANNEL: Token validation parameters when connecting to a bot
             </summary>
         </member>
-        <member name="F:Microsoft.Bot.Connector.JwtConfig.ToBotFromMSAOpenIdMetadataUrl">
+        <member name="F:Microsoft.Bot.Connector.JwtConfig.ToBotFromChannelAllowedSigningAlgorithms">
             <summary>
-            TO BOT FROM MSA: OpenID metadata document for tokens coming from MSA
+            TO BOT FROM CHANNEL: Allowed token signing algorithms
             </summary>
-            <remarks>
-            These settings are used to allow access from the Bot Framework Emulator
-            </remarks>
         </member>
-        <member name="F:Microsoft.Bot.Connector.JwtConfig.ToBotFromMSATokenValidationParameters">
+        <member name="F:Microsoft.Bot.Connector.JwtConfig.ToBotFromEmulatorOpenIdMetadataUrl">
             <summary>
-            TO BOT FROM MSA: Token validation parameters when connecting to a channel
+            TO BOT FROM EMULATOR: OpenID metadata document for tokens coming from MSA
             </summary>
-            <remarks>
-            These settings are used to allow access from the Bot Framework Emulator
-            </remarks>
+        </member>
+        <member name="F:Microsoft.Bot.Connector.JwtConfig.ToBotFromEmulatorTokenValidationParameters">
+            <summary>
+            TO BOT FROM EMULATOR: Token validation parameters when connecting to a channel
+            </summary>
+        </member>
+        <member name="T:Microsoft.Bot.Connector.JwtTokenExtractor.EndorsementsValidator">
+            <summary>
+            The endorsements validator delegate.
+            </summary>
+            <param name="endorsements"> The endorsements used for validation.</param>
+            <returns>true if validation passes; false otherwise.</returns>
         </member>
         <member name="F:Microsoft.Bot.Connector.JwtTokenExtractor._openIdMetadataCache">
             <summary>
-            Shared of OpenIdConnect configuration managers (one per metadata URL)
+            Cache for OpenIdConnect configuration managers (one per metadata URL)
+            </summary>
+        </member>
+        <member name="F:Microsoft.Bot.Connector.JwtTokenExtractor._endorsementsCache">
+            <summary>
+            Cache for Endorsement configuration managers (one per metadata URL)
             </summary>
         </member>
         <member name="F:Microsoft.Bot.Connector.JwtTokenExtractor._tokenValidationParameters">
@@ -1798,8 +1877,31 @@
         </member>
         <member name="F:Microsoft.Bot.Connector.JwtTokenExtractor._openIdMetadata">
             <summary>
-            OpenIdConnect configuration manager for this instances
+            OpenIdConnect configuration manager for this instance
             </summary>
+        </member>
+        <member name="F:Microsoft.Bot.Connector.JwtTokenExtractor._endorsementsData">
+            <summary>
+            Endorsements configuration manager for this instance
+            </summary>
+        </member>
+        <member name="F:Microsoft.Bot.Connector.JwtTokenExtractor._allowedSigningAlgorithms">
+            <summary>
+            Allowed signing algorithms
+            </summary>
+        </member>
+        <member name="F:Microsoft.Bot.Connector.JwtTokenExtractor._validator">
+            <summary>
+            Delegate for validating endorsements extracted from JwtToken
+            </summary>
+        </member>
+        <member name="T:Microsoft.Bot.Connector.CustomRedirectHandler">
+            <summary>
+            A custom redirect handler for <see cref="F:System.Net.HttpStatusCode.RedirectKeepVerb"/>.
+            </summary>
+            <remarks>
+            This makes sure that authorization headers stay intact between 307 redirects.
+            </remarks>
         </member>
         <member name="F:Microsoft.Bot.Connector.MicrosoftAppCredentials.MicrosoftAppIdKey">
             <summary>
@@ -1833,40 +1935,53 @@
             <param name="request">The HTTP request.</param><param name="cancellationToken">Cancellation token.</param>
         </member>
         <member name="T:Microsoft.Bot.Connector.StateClient">
-            <summary>
-            The Bot State REST API allows your bot to store and retrieve state
-            associated with conversations conducted through
-            the [Bot Connector REST API](/en-us/restapi/connector). The Bot State
-            REST API uses REST and HTTPS to send and receive
-            encoded content that your bot controls.
+             <summary>
+             The Bot State REST API allows your bot to store and retrieve state
+             associated with conversations conducted through
+             the [Bot Connector REST API](/en-us/restapi/connector). The Bot State
+             REST API uses REST and HTTPS to send and receive
+             encoded content that your bot controls.
             
-            Client libraries for this REST API are available. See below for a
-            list.
+             Client libraries for this REST API are available. See below for a list.
             
-            Your bot may store data for a user, a conversation, or a single user
-            within a conversation (called "private" data).
-            Each payload may be up to 32 kilobytes in size. The data may be
-            removed by the bot or upon a user's request, e.g.
-            if the user requests the channel to inform the bot (and therefore, the
-            Bot Framework) to delete the user's data.
+             Your bot may store data for a user, a conversation, or a single user
+             within a conversation (called "private" data).
+             Each payload may be up to 32 kilobytes in size. The data may be removed
+             by the bot or upon a user's request, e.g.
+             if the user requests the channel to inform the bot (and therefore, the
+             Bot Framework) to delete the user's data.
             
-            The Bot State REST API is only useful in conjunction with the Bot
-            Connector REST API.
+             The Bot State REST API is only useful in conjunction with the Bot
+             Connector REST API.
             
-            Authentication for both the Bot State and Bot Connector REST APIs is
-            accomplished with JWT Bearer tokens, and is
-            described in detail in the [Connector
-            Authentication](/en-us/restapi/authentication) document.
+             Authentication for both the Bot State and Bot Connector REST APIs is
+             accomplished with JWT Bearer tokens, and is
+             described in detail in the [Connector
+             Authentication](/en-us/restapi/authentication) document.
             
-            # Client Libraries for the Bot State REST API
+             Currently, clients calling the Bot State REST API must send their
+             requests to the ```state.botframework.com```
+             host. Channel services do not currently implement the Bot State REST
+             API.
             
-            * [Bot Builder for C#](/en-us/csharp/builder/sdkreference/)
-            * [Bot Builder for Node.js](/en-us/node/builder/overview/)
-            * Generate your own from the [State API Swagger
-            file](https://raw.githubusercontent.com/Microsoft/BotBuilder/master/CSharp/Library/Microsoft.Bot.Connector/Swagger/StateAPI.json)
+             Requests to update bot state include an ```eTag``` property within the
+             JSON payload. You may use the ```eTag```
+             for optimistic concurrency control. If you include an ```eTag``` value
+             equivalent to the ```eTag``` you saw
+             in a prior object, the Bot State REST API will fail the request with an
+             HTTP 409 or 412 error, on update or create,
+             respectively. If you wish to overwrite whatever data is in the Bot
+             State service, set ```eTag``` to ```*```.
             
-            © 2016 Microsoft
-            </summary>
+             # Client Libraries for the Bot State REST API
+            
+             * [Bot Builder for C#](/en-us/csharp/builder/sdkreference/)
+             * [Bot Builder for Node.js](/en-us/node/builder/overview/)
+             * Generate your own from the [State API Swagger
+             file](https://raw.githubusercontent.com/Microsoft/BotBuilder/master/CSharp/Library/Microsoft.Bot.Connector.Shared/Swagger/StateAPI.json)
+            
+             © 2016 Microsoft
+             </summary>
         </member>
         <member name="M:Microsoft.Bot.Connector.StateClient.#ctor(System.Uri,System.String,System.String,System.Net.Http.DelegatingHandler[])">
             <summary>
@@ -1966,6 +2081,9 @@
             <param name='handlers'>
             Optional. The delegating handlers to add to the http client pipeline.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.StateClient.#ctor(System.Uri,System.Net.Http.HttpClientHandler,System.Net.Http.DelegatingHandler[])">
             <summary>
@@ -1980,6 +2098,9 @@
             <param name='handlers'>
             Optional. The delegating handlers to add to the http client pipeline.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.StateClient.#ctor(Microsoft.Rest.ServiceClientCredentials,System.Net.Http.DelegatingHandler[])">
             <summary>
@@ -1991,6 +2112,9 @@
             <param name='handlers'>
             Optional. The delegating handlers to add to the http client pipeline.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.StateClient.#ctor(Microsoft.Rest.ServiceClientCredentials,System.Net.Http.HttpClientHandler,System.Net.Http.DelegatingHandler[])">
             <summary>
@@ -2005,6 +2129,9 @@
             <param name='handlers'>
             Optional. The delegating handlers to add to the http client pipeline.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.StateClient.#ctor(System.Uri,Microsoft.Rest.ServiceClientCredentials,System.Net.Http.DelegatingHandler[])">
             <summary>
@@ -2019,6 +2146,9 @@
             <param name='handlers'>
             Optional. The delegating handlers to add to the http client pipeline.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.StateClient.#ctor(System.Uri,Microsoft.Rest.ServiceClientCredentials,System.Net.Http.HttpClientHandler,System.Net.Http.DelegatingHandler[])">
             <summary>
@@ -2036,6 +2166,9 @@
             <param name='handlers'>
             Optional. The delegating handlers to add to the http client pipeline.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.StateClient.Initialize">
             <summary>
@@ -2154,6 +2287,9 @@
             <param name='client'>
             Reference to the service client.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="P:Microsoft.Bot.Connector.BotState.Client">
             <summary>
@@ -2164,7 +2300,9 @@
             <summary>
             GetUserData
             </summary>
+            <remarks>
             Get a bots data for the user across all conversations
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2177,6 +2315,18 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
             <return>
             A response object containing the response body and response headers.
             </return>
@@ -2185,7 +2335,9 @@
             <summary>
             SetUserData
             </summary>
+            <remarks>
             Update the bot's data for a user
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2201,6 +2353,18 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
             <return>
             A response object containing the response body and response headers.
             </return>
@@ -2209,8 +2373,10 @@
             <summary>
             DeleteStateForUser
             </summary>
+            <remarks>
             Delete all data for a user in a channel (UserData and
             PrivateConversationData)
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2223,6 +2389,18 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
             <return>
             A response object containing the response body and response headers.
             </return>
@@ -2231,7 +2409,9 @@
             <summary>
             GetConversationData
             </summary>
+            <remarks>
             get the bots data for all users in a conversation
+            </remarks>
             <param name='channelId'>
             the channelId
             </param>
@@ -2244,6 +2424,18 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
             <return>
             A response object containing the response body and response headers.
             </return>
@@ -2252,7 +2444,9 @@
             <summary>
             SetConversationData
             </summary>
+            <remarks>
             Update the bot's data for all users in a conversation
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2268,6 +2462,18 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
             <return>
             A response object containing the response body and response headers.
             </return>
@@ -2276,7 +2482,9 @@
             <summary>
             GetPrivateConversationData
             </summary>
+            <remarks>
             get bot's data for a single user in a conversation
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2292,6 +2500,18 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
             <return>
             A response object containing the response body and response headers.
             </return>
@@ -2300,7 +2520,9 @@
             <summary>
             SetPrivateConversationData
             </summary>
+            <remarks>
             Update the bot's data for a single user in a conversation
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2319,6 +2541,18 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
             <return>
             A response object containing the response body and response headers.
             </return>
@@ -2332,7 +2566,9 @@
             <summary>
             GetUserData
             </summary>
+            <remarks>
             Get a bots data for the user across all conversations
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2347,7 +2583,9 @@
             <summary>
             GetUserData
             </summary>
+            <remarks>
             Get a bots data for the user across all conversations
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2365,7 +2603,9 @@
             <summary>
             SetUserData
             </summary>
+            <remarks>
             Update the bot's data for a user
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2383,7 +2623,9 @@
             <summary>
             SetUserData
             </summary>
+            <remarks>
             Update the bot's data for a user
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2404,8 +2646,10 @@
             <summary>
             DeleteStateForUser
             </summary>
+            <remarks>
             Delete all data for a user in a channel (UserData and
             PrivateConversationData)
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2420,8 +2664,10 @@
             <summary>
             DeleteStateForUser
             </summary>
+            <remarks>
             Delete all data for a user in a channel (UserData and
             PrivateConversationData)
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2439,7 +2685,9 @@
             <summary>
             GetConversationData
             </summary>
+            <remarks>
             get the bots data for all users in a conversation
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2454,7 +2702,9 @@
             <summary>
             GetConversationData
             </summary>
+            <remarks>
             get the bots data for all users in a conversation
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2472,7 +2722,9 @@
             <summary>
             SetConversationData
             </summary>
+            <remarks>
             Update the bot's data for all users in a conversation
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2490,7 +2742,9 @@
             <summary>
             SetConversationData
             </summary>
+            <remarks>
             Update the bot's data for all users in a conversation
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2511,7 +2765,9 @@
             <summary>
             GetPrivateConversationData
             </summary>
+            <remarks>
             get bot's data for a single user in a conversation
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2529,7 +2785,9 @@
             <summary>
             GetPrivateConversationData
             </summary>
+            <remarks>
             get bot's data for a single user in a conversation
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2550,7 +2808,9 @@
             <summary>
             SetPrivateConversationData
             </summary>
+            <remarks>
             Update the bot's data for a single user in a conversation
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2571,7 +2831,9 @@
             <summary>
             SetPrivateConversationData
             </summary>
+            <remarks>
             Update the bot's data for a single user in a conversation
+            </remarks>
             <param name='operations'>
             The operations group for this extension method.
             </param>
@@ -2600,7 +2862,9 @@
             <summary>
             GetUserData
             </summary>
+            <remarks>
             Get a bots data for the user across all conversations
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2613,12 +2877,23 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.IBotState.SetUserDataWithHttpMessagesAsync(System.String,System.String,Microsoft.Bot.Connector.BotData,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             SetUserData
             </summary>
+            <remarks>
             Update the bot's data for a user
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2634,13 +2909,24 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.IBotState.DeleteStateForUserWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             DeleteStateForUser
             </summary>
+            <remarks>
             Delete all data for a user in a channel (UserData and
             PrivateConversationData)
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2653,12 +2939,23 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.IBotState.GetConversationDataWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             GetConversationData
             </summary>
+            <remarks>
             get the bots data for all users in a conversation
+            </remarks>
             <param name='channelId'>
             the channelId
             </param>
@@ -2671,12 +2968,23 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.IBotState.SetConversationDataWithHttpMessagesAsync(System.String,System.String,Microsoft.Bot.Connector.BotData,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             SetConversationData
             </summary>
+            <remarks>
             Update the bot's data for all users in a conversation
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2692,12 +3000,23 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.IBotState.GetPrivateConversationDataWithHttpMessagesAsync(System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             GetPrivateConversationData
             </summary>
+            <remarks>
             get bot's data for a single user in a conversation
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2713,12 +3032,23 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="M:Microsoft.Bot.Connector.IBotState.SetPrivateConversationDataWithHttpMessagesAsync(System.String,System.String,System.String,Microsoft.Bot.Connector.BotData,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             SetPrivateConversationData
             </summary>
+            <remarks>
             Update the bot's data for a single user in a conversation
+            </remarks>
             <param name='channelId'>
             channelId
             </param>
@@ -2737,42 +3067,64 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+            <exception cref="T:Microsoft.Bot.Connector.ErrorResponseException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
         </member>
         <member name="T:Microsoft.Bot.Connector.IStateClient">
-            <summary>
-            The Bot State REST API allows your bot to store and retrieve state
-            associated with conversations conducted through
-            the [Bot Connector REST API](/en-us/restapi/connector). The Bot State
-            REST API uses REST and HTTPS to send and receive
-            encoded content that your bot controls.
+             <summary>
+             The Bot State REST API allows your bot to store and retrieve state
+             associated with conversations conducted through
+             the [Bot Connector REST API](/en-us/restapi/connector). The Bot State
+             REST API uses REST and HTTPS to send and receive
+             encoded content that your bot controls.
             
-            Client libraries for this REST API are available. See below for a
-            list.
+             Client libraries for this REST API are available. See below for a list.
             
-            Your bot may store data for a user, a conversation, or a single user
-            within a conversation (called "private" data).
-            Each payload may be up to 32 kilobytes in size. The data may be
-            removed by the bot or upon a user's request, e.g.
-            if the user requests the channel to inform the bot (and therefore, the
-            Bot Framework) to delete the user's data.
+             Your bot may store data for a user, a conversation, or a single user
+             within a conversation (called "private" data).
+             Each payload may be up to 32 kilobytes in size. The data may be removed
+             by the bot or upon a user's request, e.g.
+             if the user requests the channel to inform the bot (and therefore, the
+             Bot Framework) to delete the user's data.
             
-            The Bot State REST API is only useful in conjunction with the Bot
-            Connector REST API.
+             The Bot State REST API is only useful in conjunction with the Bot
+             Connector REST API.
             
-            Authentication for both the Bot State and Bot Connector REST APIs is
-            accomplished with JWT Bearer tokens, and is
-            described in detail in the [Connector
-            Authentication](/en-us/restapi/authentication) document.
+             Authentication for both the Bot State and Bot Connector REST APIs is
+             accomplished with JWT Bearer tokens, and is
+             described in detail in the [Connector
+             Authentication](/en-us/restapi/authentication) document.
             
-            # Client Libraries for the Bot State REST API
+             Currently, clients calling the Bot State REST API must send their
+             requests to the ```state.botframework.com```
+             host. Channel services do not currently implement the Bot State REST
+             API.
             
-            * [Bot Builder for C#](/en-us/csharp/builder/sdkreference/)
-            * [Bot Builder for Node.js](/en-us/node/builder/overview/)
-            * Generate your own from the [State API Swagger
-            file](https://raw.githubusercontent.com/Microsoft/BotBuilder/master/CSharp/Library/Microsoft.Bot.Connector/Swagger/StateAPI.json)
+             Requests to update bot state include an ```eTag``` property within the
+             JSON payload. You may use the ```eTag```
+             for optimistic concurrency control. If you include an ```eTag``` value
+             equivalent to the ```eTag``` you saw
+             in a prior object, the Bot State REST API will fail the request with an
+             HTTP 409 or 412 error, on update or create,
+             respectively. If you wish to overwrite whatever data is in the Bot
+             State service, set ```eTag``` to ```*```.
             
-            © 2016 Microsoft
-            </summary>
+             # Client Libraries for the Bot State REST API
+            
+             * [Bot Builder for C#](/en-us/csharp/builder/sdkreference/)
+             * [Bot Builder for Node.js](/en-us/node/builder/overview/)
+             * Generate your own from the [State API Swagger
+             file](https://raw.githubusercontent.com/Microsoft/BotBuilder/master/CSharp/Library/Microsoft.Bot.Connector.Shared/Swagger/StateAPI.json)
+            
+             © 2016 Microsoft
+             </summary>
         </member>
         <member name="P:Microsoft.Bot.Connector.IStateClient.BaseUri">
             <summary>

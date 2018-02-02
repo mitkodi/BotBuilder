@@ -28,11 +28,7 @@
       "dependencies": {
         "Microsoft.Bot.Builder": {
           "target": "project"
-        },
-        "Microsoft.Bot.Connector": {
-          "target": "project"
-        }
-      }
+        }     }
     }
   },
 

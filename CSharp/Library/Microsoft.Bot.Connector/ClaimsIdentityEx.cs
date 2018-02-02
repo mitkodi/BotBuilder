@@ -1,17 +1,12 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using System.Security.Claims;
+using System.Linq;
 
 namespace Microsoft.Bot.Connector
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Rest;
-    using System.Linq;
-
-    public static class ClaimsIdentityEx
-    {
+    public static class ClaimsIdentityEx {
         public const string AppPasswordClaim = "appPassword";
 
         /// <summary>
@@ -24,8 +19,8 @@ namespace Microsoft.Bot.Connector
             if (identity == null)
                 return null;
 
-            // emulator adds appid claim
-            Claim botClaim = identity.Claims.FirstOrDefault(c => c.Type == "appid");
+            // emulator adds appid claim for v1 tokens, or azp for v2 tokens
+            Claim botClaim = identity.Claims.FirstOrDefault(c => c.Type == "appid" || c.Type == "azp");
             if (botClaim != null)
                 return botClaim.Value;
 
@@ -42,7 +37,7 @@ namespace Microsoft.Bot.Connector
         /// </summary>
         /// <param name="identity"></param>
         /// <returns></returns>
-        public static string GetAppPasswordFromClaims(this ClaimsIdentity identity)
+        public static string GetAppPasswordFromClaims(this ClaimsIdentity identity) 
         {
             return identity?.Claims.FirstOrDefault(c => c.Type == AppPasswordClaim)?.Value;
         }

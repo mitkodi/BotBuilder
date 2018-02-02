@@ -46,9 +46,6 @@
     <None Include="app.config" />
     <None Include="Doxyfile" />
     <None Include="doxygen.bat" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="botframework.css">
@@ -103,6 +100,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.IdentityModel.Tokens">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.1.4\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <Target Name="Clean">
     <RemoveDir Directories="@(DirsToClean)" />
